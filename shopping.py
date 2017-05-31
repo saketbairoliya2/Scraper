@@ -1,15 +1,18 @@
 # For Scrapping data from www.shopping.com
+from bs4 import BeautifulSoup
+
 import argparse
 import requests
 import sys
 import re
 
-from bs4 import BeautifulSoup
-
 SEARCH_KEY_URL = "http://www.shopping.com/products?KW={key}"
 SERACH_PAGE_URL = "http://www.shopping.com/products~PG-{page_num}?KW={key}"
 
 def print_items(items):
+	'''
+	Prints list in identation
+	'''
     if len(items) == 0:
         print ("Nothing to show.")
         return
@@ -43,7 +46,8 @@ class ShoppingScraper(object):
 	def get_total_number_of_listing(self, key):
 		'''
 		For the given key it will get total listing.
-		total listing = No of listing on 1st page * (no_of_page - 1) + no of listings on last_page
+		total listing = No of listing on 1st page * (no_of_page - 1) +\
+		no of listings on last_page
 		'''
 		serach_result = requests.get(SEARCH_KEY_URL.format(key=key))
 		
@@ -77,7 +81,6 @@ class ShoppingScraper(object):
 		'''
 		Gets Product details inside .gridItemBtm of each element
 		'''
-		
 		items = []
 
 		for products in self.get_listings_on_page(key, page_num):
@@ -114,7 +117,7 @@ class ShoppingScraper(object):
 		except ValueError:
 			return 0
 
-
+#Program Executation starts here
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("key", help='Key to be scraped')
